@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Results from './Results';
+import ShapeSelector from './ShapeSelector';
 
 const CarpetAreaCalculator = () => {
   const [builtUpArea, setBuiltUpArea] = useState('');
@@ -15,6 +16,15 @@ const CarpetAreaCalculator = () => {
   const [deductionValue, setDeductionValue] = useState('');
   const [unit, setUnit] = useState('sqft');
   const [results, setResults] = useState(null);
+  const [useShapeCalculator, setUseShapeCalculator] = useState(false);
+  const [shapeArea, setShapeArea] = useState(0);
+
+  const handleShapeAreaChange = (area: number) => {
+    setShapeArea(area);
+    if (area > 0) {
+      setBuiltUpArea(area.toString());
+    }
+  };
 
   const calculateCarpetArea = () => {
     const builtUp = parseFloat(builtUpArea);
@@ -58,10 +68,34 @@ const CarpetAreaCalculator = () => {
     setBuiltUpArea('');
     setDeductionValue('');
     setResults(null);
+    setShapeArea(0);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      {/* Shape Calculator Toggle */}
+      <Card className="shadow-lg">
+        <CardContent className="p-4">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="useShapeCalculator"
+              checked={useShapeCalculator}
+              onChange={(e) => setUseShapeCalculator(e.target.checked)}
+              className="rounded"
+            />
+            <Label htmlFor="useShapeCalculator" className="cursor-pointer">
+              Use Shape Calculator for Built-up Area
+            </Label>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Shape Selector */}
+      {useShapeCalculator && (
+        <ShapeSelector onAreaChange={handleShapeAreaChange} unit={unit} />
+      )}
+
       <Card className="shadow-lg">
         <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
           <CardTitle className="flex items-center space-x-2">
@@ -76,7 +110,7 @@ const CarpetAreaCalculator = () => {
           {/* Built-up Area Input */}
           <div className="space-y-2">
             <Label htmlFor="builtUpArea" className="text-sm font-medium text-gray-700">
-              Built-up Area *
+              Built-up Area * {useShapeCalculator && shapeArea > 0 && '(Auto-calculated from shape)'}
             </Label>
             <div className="flex space-x-2">
               <Input
@@ -88,12 +122,13 @@ const CarpetAreaCalculator = () => {
                 className="flex-1"
                 min="0"
                 step="0.01"
+                readOnly={useShapeCalculator && shapeArea > 0}
               />
               <Select value={unit} onValueChange={setUnit}>
                 <SelectTrigger className="w-24">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="sqft">sq. ft</SelectItem>
                   <SelectItem value="sqm">sq. m</SelectItem>
                 </SelectContent>
