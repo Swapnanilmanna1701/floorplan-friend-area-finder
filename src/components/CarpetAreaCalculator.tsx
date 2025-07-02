@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Results from './Results';
-import ShapeSelector from './ShapeSelector';
 
 const CarpetAreaCalculator = () => {
   const [builtUpArea, setBuiltUpArea] = useState('');
@@ -16,15 +15,6 @@ const CarpetAreaCalculator = () => {
   const [deductionValue, setDeductionValue] = useState('');
   const [unit, setUnit] = useState('sqft');
   const [results, setResults] = useState(null);
-  const [useShapeCalculator, setUseShapeCalculator] = useState(false);
-  const [shapeArea, setShapeArea] = useState(0);
-
-  const handleShapeAreaChange = (area: number) => {
-    setShapeArea(area);
-    if (area > 0) {
-      setBuiltUpArea(area.toString());
-    }
-  };
 
   const calculateCarpetArea = () => {
     const builtUp = parseFloat(builtUpArea);
@@ -68,34 +58,10 @@ const CarpetAreaCalculator = () => {
     setBuiltUpArea('');
     setDeductionValue('');
     setResults(null);
-    setShapeArea(0);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Shape Calculator Toggle */}
-      <Card className="shadow-lg">
-        <CardContent className="p-4">
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              id="useShapeCalculator"
-              checked={useShapeCalculator}
-              onChange={(e) => setUseShapeCalculator(e.target.checked)}
-              className="rounded"
-            />
-            <Label htmlFor="useShapeCalculator" className="cursor-pointer">
-              Use Shape Calculator for Built-up Area
-            </Label>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Shape Selector */}
-      {useShapeCalculator && (
-        <ShapeSelector onAreaChange={handleShapeAreaChange} unit={unit} />
-      )}
-
       <Card className="shadow-lg">
         <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
           <CardTitle className="flex items-center space-x-2">
@@ -109,8 +75,8 @@ const CarpetAreaCalculator = () => {
         <CardContent className="p-6 space-y-6">
           {/* Built-up Area Input */}
           <div className="space-y-2">
-            <Label htmlFor="builtUpArea" className="text-sm font-medium text-gray-700">
-              Built-up Area * {useShapeCalculator && shapeArea > 0 && '(Auto-calculated from shape)'}
+            <Label htmlFor="builtUpArea" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Built-up Area *
             </Label>
             <div className="flex space-x-2">
               <Input
@@ -122,13 +88,12 @@ const CarpetAreaCalculator = () => {
                 className="flex-1"
                 min="0"
                 step="0.01"
-                readOnly={useShapeCalculator && shapeArea > 0}
               />
               <Select value={unit} onValueChange={setUnit}>
                 <SelectTrigger className="w-24">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-white">
+                <SelectContent className="bg-white dark:bg-gray-800 border dark:border-gray-700">
                   <SelectItem value="sqft">sq. ft</SelectItem>
                   <SelectItem value="sqm">sq. m</SelectItem>
                 </SelectContent>
@@ -138,7 +103,7 @@ const CarpetAreaCalculator = () => {
 
           {/* Deduction Type */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Deduction Method *
             </Label>
             <RadioGroup
@@ -148,13 +113,13 @@ const CarpetAreaCalculator = () => {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="percentage" id="percentage" />
-                <Label htmlFor="percentage" className="text-sm">
+                <Label htmlFor="percentage" className="text-sm dark:text-gray-300">
                   Percentage deduction for wall thickness/common areas
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="fixed" id="fixed" />
-                <Label htmlFor="fixed" className="text-sm">
+                <Label htmlFor="fixed" className="text-sm dark:text-gray-300">
                   Fixed deduction ({unit === 'sqft' ? 'sq. ft' : 'sq. m'})
                 </Label>
               </div>
@@ -163,7 +128,7 @@ const CarpetAreaCalculator = () => {
 
           {/* Deduction Value */}
           <div className="space-y-2">
-            <Label htmlFor="deductionValue" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="deductionValue" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               {deductionType === 'percentage' ? 'Deduction Percentage (%)' : `Deduction Area (${unit === 'sqft' ? 'sq. ft' : 'sq. m'})`} *
             </Label>
             <Input
@@ -179,10 +144,10 @@ const CarpetAreaCalculator = () => {
           </div>
 
           {/* Info Box */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
             <div className="flex items-start space-x-2">
-              <Info className="w-5 h-5 text-blue-600 mt-0.5" />
-              <div className="text-sm text-blue-800">
+              <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+              <div className="text-sm text-blue-800 dark:text-blue-300">
                 <p className="font-medium mb-1">What is Carpet Area?</p>
                 <p>
                   Carpet area is the actual usable floor area of your property, excluding walls, 
