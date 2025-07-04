@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Calculator, Menu, Moon, Sun } from "lucide-react";
 import { Button } from "./ui/button";
-import { useTheme } from "next-themes";
+import { useTheme } from "./ThemeProvider";
 
 const Navbar = () => {
   const location = useLocation();
