@@ -158,6 +158,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-**Built with TypeScript + Vite + React ❤️ by TheArchSpace Team**
+**Built with TypeScript + Vite + React ❤️ by Swapnanil with Lovable**
 
 *Last updated: January 2025*
